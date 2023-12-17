@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using System.Data.OleDb;
 
 namespace Birthdays
 {
@@ -11,10 +12,13 @@ namespace Birthdays
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var path = @"C:\users\Strahinja\Desktop";
-            var file = @"C:\users\Strahinja\source\repos\Birthdays\Birthdays\info.csv";
-            var read = File.ReadAllText(file);
-            var row = read.Split("\r\n");
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:/Users/PC/Desktop/DDK/DDK - Indjija.mdb");
+            OleDbCommand select = new OleDbCommand();
+            select.Connection = con;
+            select.CommandText = "Select * From RODJENDANI";
+            con.Open();
+            OleDbDataReader reader = select.ExecuteReader();
+            var path = @"C:\users\pc\Desktop";
             using var workbook = new XLWorkbook();
             var worksheet = workbook.AddWorksheet("Sheet1");
             worksheet.ColumnWidth = 20;
@@ -23,12 +27,10 @@ namespace Birthdays
             worksheet.Cell("A3").Value = "38163584011";
             var selectedDate = dateTimePicker1.Value;
             int count = 4;
-            for (int i = 0; i < row.Length; i++)
+            while (reader.Read())
             {
-                string item = row[i];
-                var parts = item.Split(",");
-                string phone = parts[0];
-                string date = parts[1];
+                string phone = reader.GetString(3);
+                string date = reader.GetDateTime(4).ToString();
                 DateTime birthday;
                 DateTime.TryParse(date, out birthday);
                 if (birthday.Month == selectedDate.Month && birthday.Day == selectedDate.Day)
@@ -39,6 +41,12 @@ namespace Birthdays
             }
             var fileName = "/" + selectedDate.Day.ToString() + "." + selectedDate.Month.ToString() + ".xlsx";
             workbook.SaveAs(path + fileName);
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
