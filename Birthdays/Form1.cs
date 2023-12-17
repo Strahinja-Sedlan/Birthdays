@@ -22,9 +22,9 @@ namespace Birthdays
             using var workbook = new XLWorkbook();
             var worksheet = workbook.AddWorksheet("Sheet1");
             worksheet.ColumnWidth = 20;
-            worksheet.Cell("A1").Value = "38169778729";
-            worksheet.Cell("A2").Value = "381655840111";
-            worksheet.Cell("A3").Value = "38163584011";
+            worksheet.Cell("A1").Value = "3816******";
+            worksheet.Cell("A2").Value = "3816*******";
+            worksheet.Cell("A3").Value = "3816******";
             var selectedDate = dateTimePicker1.Value;
             int count = 4;
             while (reader.Read())
